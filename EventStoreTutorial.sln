@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStoreTutorial", "EventStoreTutorial\EventStoreTutorial.csproj", "{8607B380-61D8-48E5-8FB1-8B270FFF27DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8607B380-61D8-48E5-8FB1-8B270FFF27DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8607B380-61D8-48E5-8FB1-8B270FFF27DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8607B380-61D8-48E5-8FB1-8B270FFF27DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8607B380-61D8-48E5-8FB1-8B270FFF27DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD45B281-EAFE-4116-9A31-CA3794B7F0F0}
+	EndGlobalSection
+EndGlobal
