@@ -1,5 +1,7 @@
 ﻿using EventStore.ClientAPI;
+using EventStore.ClientAPI.SystemData;
 using EventStoreTutorial.Cardevents;
+using Infrastructure;
 using Newtonsoft.Json;
 using System;
 using System.Text;
@@ -14,12 +16,32 @@ namespace EventStoreTutorial
 
         static async Task Main(string[] args)
         {
-            using var connection = await GetConnectionAsync();
+            using var connection = await EventStoreUtilities.GetConnectionAsync();
 
-            var eventData = GetEventData("Duplicate", new { Datetime = new DateTime(2020, 10, 19) });
-            
+            var eventData = EventStoreUtilities.GetEventData("Duplicate", new { Datetime = new DateTime(2020, 10, 19) });
+
             var stream = "card-75d7486b-fbbe-4b08-8aa9-22bbbbbbbbbb";
+            var group = "CardState";
 
+            //await RenewStateAndSupscribeToUpdates(connection, stream);
+
+            await SuscribeToPersistentData(connection, stream, group);
+
+            Console.ReadLine();
+        }
+
+        private static async Task SuscribeToPersistentData(IEventStoreConnection connection, string stream, string group)
+        {
+            Console.WriteLine("Connecting to persistent subscription...");
+            await connection.ConnectToPersistentSubscriptionAsync(
+                stream, 
+                group, 
+                CardEventPersistentSubscriptionHandler, 
+                autoAck: false);
+        }
+
+        private static async Task RenewStateAndSupscribeToUpdates(IEventStoreConnection connection, string stream)
+        {
             var events = await connection.ReadStreamEventsForwardAsync(stream, 0, 100, false);
 
             Console.WriteLine($"Initial balance: {Card.CurrentAmount}");
@@ -30,33 +52,18 @@ namespace EventStoreTutorial
 
             Console.WriteLine($"Current balance: {Card.CurrentAmount}");
 
-            await connection.SubscribeToStreamAsync(stream, false, CardEventHandler);
-
-            Console.ReadLine();
+            await connection.SubscribeToStreamAsync(stream, false, CardEventSubscriptionHandler);
         }
 
-        static void CardEventHandler(EventStoreSubscription subscription, ResolvedEvent evt)
+        static void CardEventPersistentSubscriptionHandler(EventStorePersistentSubscriptionBase persistentSubscription, ResolvedEvent evt)
         {
             ProcessCardEvent(Card, evt.Event);
+            persistentSubscription.Acknowledge(evt.Event.EventId);
         }
 
-        static async Task<IEventStoreConnection> GetConnectionAsync()
+        static void CardEventSubscriptionHandler(EventStoreSubscription subscription, ResolvedEvent evt)
         {
-            var connectionString = "tcp://admin:changeit@localhost:1113";
-            var conn = EventStoreConnection.Create(new Uri(connectionString));
-            await conn.ConnectAsync();
-            Console.WriteLine("connected");
-            return conn;
-        }
-
-        static EventData GetEventData(string eventType, object @event, object eventMetadata = null)
-        {
-            var jsonEvent = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event));
-            var jsonEventMetadata = eventMetadata == null
-                ? null
-                : Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(eventMetadata));
-
-            return new EventData(Guid.NewGuid(), eventType, true, jsonEvent, jsonEventMetadata);
+            ProcessCardEvent(Card, evt.Event);
         }
         
         static void ProcessCardEvent(Card card, RecordedEvent evt)
