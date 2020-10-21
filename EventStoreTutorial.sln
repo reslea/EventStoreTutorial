@@ -9,13 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserRegistration", "UserReg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserRegistrator", "UserRegistrator\UserRegistrator.csproj", "{080BC355-A9B1-41FE-A188-C56884B87F25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendregistrationEmail", "SendregistrationEmail\SendregistrationEmail.csproj", "{1E368D84-A9F7-4A12-AC60-21B7FFA4B408}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendregistrationEmail", "SendregistrationEmail\SendregistrationEmail.csproj", "{1E368D84-A9F7-4A12-AC60-21B7FFA4B408}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{A0C156D8-A92E-4AF8-94B9-AF7FF47DD3EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{A0C156D8-A92E-4AF8-94B9-AF7FF47DD3EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RegisterConfirmSendEmailExample", "RegisterConfirmSendEmailExample", "{2280D314-F411-490D-B88C-95E40EBE399E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{EC434894-F060-4863-BB4F-30A5FC2F815F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{EC434894-F060-4863-BB4F-30A5FC2F815F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CardStateExample", "CardStateExample", "{A4B02A99-B4DE-4678-A264-90B5A544C387}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +54,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{8607B380-61D8-48E5-8FB1-8B270FFF27DA} = {A4B02A99-B4DE-4678-A264-90B5A544C387}
 		{95C55737-212D-4646-95FA-F17A8EF3FB17} = {2280D314-F411-490D-B88C-95E40EBE399E}
 		{080BC355-A9B1-41FE-A188-C56884B87F25} = {2280D314-F411-490D-B88C-95E40EBE399E}
 		{1E368D84-A9F7-4A12-AC60-21B7FFA4B408} = {2280D314-F411-490D-B88C-95E40EBE399E}
