@@ -15,7 +15,7 @@ namespace SendregistrationEmail
         {
             var conn = await EventStoreUtilities.GetConnectionAsync();
 
-            var streamName = "$ce-user";
+            var streamName = $"et-{RegisterUser.EventType}Success";
             await conn.SubscribeToStreamAsync(streamName, true,
                 (subsription, @event) => ProcessRegisteredUsers(conn, subsription, @event));
 
@@ -24,8 +24,6 @@ namespace SendregistrationEmail
 
         private static async Task ProcessRegisteredUsers(IEventStoreConnection connection, EventStoreSubscription subsription, ResolvedEvent @event)
         {
-            if (@event.Event.EventType != $"{RegisterUser.EventType}Success") return;
-
             var userData = @event.Event.Data;
             var user = JsonConvert.DeserializeObject<RegisterUser>(Encoding.UTF8.GetString(userData));
 

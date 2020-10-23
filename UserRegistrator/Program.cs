@@ -16,7 +16,7 @@ namespace UserRegistrator
         {
             var conn = await EventStoreUtilities.GetConnectionAsync();
 
-            var streamName = "$ce-user";
+            var streamName = $"$et-{RegisterUser.EventType}";
             await conn.SubscribeToStreamAsync(streamName, true, 
                 (subsription, @event) => ProcessUserRegistration(conn, subsription, @event));
 
@@ -25,8 +25,6 @@ namespace UserRegistrator
 
         private static async Task ProcessUserRegistration(IEventStoreConnection connection, EventStoreSubscription subscription, ResolvedEvent @event)
         {
-            if (@event.Event.EventType != RegisterUser.EventType) return;
-
             var userData = @event.Event.Data;
             var user = JsonConvert.DeserializeObject<RegisterUser>(Encoding.UTF8.GetString(userData));
 
