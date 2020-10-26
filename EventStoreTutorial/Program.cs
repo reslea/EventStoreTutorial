@@ -1,9 +1,15 @@
 ﻿using EventStore.ClientAPI;
+using EventStore.ClientAPI.Common.Log;
+using EventStore.ClientAPI.Projections;
 using EventStore.ClientAPI.SystemData;
 using EventStoreTutorial.Cardevents;
 using Infrastructure;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,15 +23,31 @@ namespace EventStoreTutorial
         static async Task Main(string[] args)
         {
             using var connection = await EventStoreUtilities.GetConnectionAsync();
+            var creds = connection.Settings.DefaultUserCredentials;
+                        
+            var stream = "card-75d7486b-fbbe-4b08-8aa9-bbbbbbbbbbbb";
 
-            var eventData = EventStoreUtilities.GetEventData("Duplicate", new { Datetime = new DateTime(2020, 10, 19) });
+            var query = await File.ReadAllTextAsync(@"Queries\specifiCardQuery.js");
 
-            var stream = "card-75d7486b-fbbe-4b08-8aa9-22bbbbbbbbbb";
-            var group = "CardState";
+            var logger = new ConsoleLogger();
+            var endpoint = new IPEndPoint(IPAddress.Loopback, 2113);
+            var manager = new ProjectionsManager(logger, endpoint, TimeSpan.FromSeconds(30));
 
-            //await RenewStateAndSupscribeToUpdates(connection, stream);
+            //await manager.CreateOneTimeAsync(query, creds);
 
-            await SuscribeToPersistentData(connection, stream, group);
+            //var listOneTime = await manager.ListOneTimeAsync(creds);
+
+            var projectionName = "bbb-card balance";
+
+            var result = await manager.GetResultAsync(projectionName, creds);
+            Console.WriteLine(JObject.Parse(result)["balance"]);
+
+            var prjectionStream = $"$projections-{projectionName}-result";
+            await connection.SubscribeToStreamAsync(prjectionStream, false, (_, evt) =>
+            {
+                var subscribedResult = JObject.Parse(Encoding.UTF8.GetString(evt.Event.Data));
+                Console.WriteLine(subscribedResult["balance"]);
+            });
 
             Console.ReadLine();
         }
